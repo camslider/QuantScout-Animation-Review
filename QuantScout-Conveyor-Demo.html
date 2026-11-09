@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>QuantScout — Scouting Pipeline</title>
+  <style>
+    :root {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #f3f1ec;
+      background: #080b0a;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 980px; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(189, 149, 93, .026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(189, 149, 93, .026) 1px, transparent 1px),
+        radial-gradient(ellipse at 70% 68%, rgba(102, 64, 24, .10), transparent 46%),
+        #080b0a;
+      background-size: 54px 54px, 54px 54px, auto, auto;
+    }
+    button { font: inherit; }
+    .site-header {
+      height: 104px;
+      width: min(100%, 1800px);
+      margin: 0 auto;
+      padding: 0 clamp(42px, 4.2vw, 76px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(219, 212, 199, .16);
+      background: rgba(4, 7, 6, .62);
+    }
+    .brand { font-size: 30px; font-weight: 700; letter-spacing: -.06em; }
+    .navigation { display: flex; align-items: center; gap: clamp(25px, 2.8vw, 52px); color: #dedbd6; font-size: 16px; white-space: nowrap; }
+    .header-action {
+      padding: 13px 22px;
+      min-width: 220px;
+      color: #f1eee8;
+      background: rgba(12, 15, 13, .75);
+      border: 1px solid #b98b4e;
+      border-radius: 6px;
+      font-size: 16px;
+      text-align: left;
+    }
+    .header-action span { float: right; font-size: 22px; line-height: 17px; }
+    .page { width: min(100%, 1800px); margin: 0 auto; padding: 104px clamp(42px, 4.2vw, 76px) 90px; }
+    .eyebrow, .stage-title, .callout, .report-kicker, .report-lines,
+    .report-footer { font-family: "Courier New", Courier, monospace; }
+    .eyebrow { color: #d9a44e; font-size: 13px; font-weight: 700; letter-spacing: .19em; }
+    h1 {
+      margin: 25px 0 14px;
+      max-width: 1190px;
+      font-size: clamp(55px, 4.35vw, 82px);
+      line-height: 1.02;
+      letter-spacing: -.053em;
+      font-weight: 700;
+      text-wrap: balance;
+    }
+    .intro {
+      margin: 0;
+      max-width: 100%;
+      color: #c6c2bb;
+      font-size: clamp(19px, 1.25vw, 23px);
+      line-height: 1.52;
+    }
+    .actions { display: flex; gap: 14px; margin-top: 28px; }
+    .action {
+      min-width: 226px;
+      min-height: 54px;
+      border-radius: 5px;
+      color: #f1eee8;
+      font-size: 17px;
+      background: rgba(15, 17, 16, .8);
+      border: 1px solid rgba(199, 191, 177, .35);
+      cursor: default;
+      padding: 12px 19px;
+      text-align: left;
+    }
+    .action:first-child { border-color: #d6a459; }
+    .action span { float: right; margin-left: 20px; font-size: 22px; line-height: 18px; }
+    .pipeline { margin-top: 94px; position: relative; }
+    .stage-headings {
+      display: grid;
+      grid-template-columns: 20.615% 21.28% 24.605% 33.5%;
+      gap: 0;
+      width: 100%;
+      padding: 0;
+      margin-top: 34px;
+    }
+    .stage-heading { min-width: 0; padding: 0 15px; }
+    .stage-title { font-size: 13px; font-weight: 700; letter-spacing: .14em; white-space: nowrap; }
+    .work-area { position: relative; height: 410px; }
+    .flow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 66.5%;
+      height: 100%;
+      overflow: hidden;
+      border-bottom: 1px dotted rgba(212, 170, 100, .14);
+    }
+    .flow::before {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset: 12% 0 10%;
+      background: radial-gradient(ellipse at 50% 62%, rgba(120, 72, 27, .13), transparent 67%);
+      clip-path: polygon(0 0, 58% 43%, 100% 43%, 100% 62%, 58% 62%, 0 100%);
+    }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider { position: absolute; top: 0; bottom: 0; border-left: 1px dotted rgba(210, 164, 92, .17); }
+    .divider.one { left: 31%; }
+    .divider.two { left: 63%; }
+    .divider.three { right: 0; }
+    .callout {
+      position: absolute;
+      z-index: 2;
+      color: #e1bf82;
+      font-size: 11px;
+      letter-spacing: .13em;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .32s ease, transform .32s ease;
+      text-shadow: 0 0 14px rgba(230, 174, 72, .28);
+      pointer-events: none;
+    }
+    .callout.visible { opacity: 1; transform: translateY(0); }
+    .callout::before { content: ""; display: inline-block; width: 27px; height: 16px; margin-right: 5px; border-left: 1px solid #a4824d; border-top: 1px solid #a4824d; vertical-align: -7px; }
+    .linked { left: 41%; top: 27%; }
+    .context { left: 53%; top: 69%; }
+    .validated { left: 73%; top: 35%; }
+    .context::before {
+      position: absolute;
+      left: -29px;
+      bottom: 1px;
+      width: 22px;
+      height: 28px;
+      display: block;
+      margin: 0;
+      border-top: 0;
+      border-left: 1px solid #c79a56;
+      border-bottom: 1px solid #c79a56;
+    }
+    .exit-light {
+      position: absolute;
+      z-index: 1;
+      right: 0;
+      top: 51%;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #edb95f;
+      box-shadow: 0 0 16px 5px rgba(239, 172, 68, .4);
+      transform: translate(50%, -50%);
+    }
+    .exit-light.pulse { animation: exit-pulse .7s ease-out; }
+    @keyframes exit-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 172, 68, .85); } 100% { box-shadow: 0 0 30px 16px rgba(239, 172, 68, 0); } }
+    .reports {
+      position: absolute;
+      left: calc(66.5% + 26px);
+      right: 0;
+      top: 35px;
+      height: 340px;
+    }
+    .report {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% - 64px);
+      min-height: 168px;
+      padding: 23px 26px 12px;
+      background: rgba(17, 19, 17, .94);
+      border: 1px solid rgba(182, 157, 117, .55);
+      border-top: 2px solid #d49d4e;
+      border-radius: 9px;
+      transition: opacity .8s ease, transform .85s cubic-bezier(.2,.72,.2,1), border-color .6s ease, box-shadow .6s ease;
+    }
+    .report[data-depth="0"] { z-index: 1; opacity: .5; transform: translate(0, 0) scale(.94); }
+    .report[data-depth="1"] { z-index: 2; opacity: .76; transform: translate(30px, 65px) scale(.97); }
+    .report[data-depth="2"] { z-index: 3; opacity: 1; transform: translate(60px, 130px) scale(1); border-color: #e3ab56; box-shadow: 0 0 32px rgba(173, 108, 32, .13); }
+    .report-dot { position: absolute; top: 21px; right: 26px; width: 8px; height: 8px; border-radius: 50%; background: #d9a254; }
+    .report-kicker { color: #aaa396; font-size: 10px; letter-spacing: .16em; }
+    .report-title { margin: 17px 0 10px; color: #f2eee6; font-family: "Courier New", Courier, monospace; font-size: 15px; font-weight: 700; letter-spacing: .035em; }
+    .report-lines { color: #c3b9a8; font-size: 12px; line-height: 1.7; white-space: nowrap; }
+    .report-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 13px; padding-top: 9px; border-top: 1px solid rgba(172, 160, 139, .23); color: #a49c90; font-size: 10px; letter-spacing: .09em; white-space: nowrap; }
+    @media (max-width: 1250px) {
+      .stage-title { font-size: 11px; }
+      .report { padding-left: 18px; padding-right: 18px; }
+      .report-lines { font-size: 10px; }
+      .report-footer { font-size: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .callout, .report { transition: none; }
+      .exit-light.pulse { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">QuantScout</div>
+    <nav class="navigation" aria-label="Main navigation">
+      <span>Our approach</span><span>Expertise</span><span>Track record</span>
+      <button class="header-action" type="button">Discuss a Search <span aria-hidden="true">→</span></button>
+    </nav>
+  </header>
+  <main class="page">
+    <div class="eyebrow">FROM BROAD SEARCH TO VALIDATED SIGNAL</div>
+    <h1>A disciplined search through the talent landscape.</h1>
+    <p class="intro">We map the wider market, examine relevant evidence, and bring forward a focused shortlist for your team to assess.</p>
+    <div class="actions">
+      <button class="action" type="button">Discuss a Search <span aria-hidden="true">→</span></button>
+      <button class="action" type="button">How We Search <span aria-hidden="true">→</span></button>
+    </div>
+    <section class="pipeline" aria-label="Animated search process from talent dataset to scouting reports">
+      <div class="work-area">
+        <div class="flow">
+          <canvas aria-hidden="true"></canvas>
+          <div class="divider one"></div><div class="divider two"></div><div class="divider three"></div>
+          <div class="callout linked" data-stage="linked">SIGNALS LINKED</div>
+          <div class="callout context" data-stage="context">ROLE CONTEXT APPLIED</div>
+          <div class="callout validated" data-stage="validated">EVIDENCE VALIDATED</div>
+          <div class="exit-light"></div>
+        </div>
+        <div class="reports" aria-live="polite" aria-label="Scouting reports">
+          <article class="report" data-depth="0">
+            <span class="report-dot"></span><div class="report-kicker">SCOUTING REPORT&nbsp; / &nbsp;01</div>
+            <h2 class="report-title">QUANT RESEARCH</h2>
+            <div class="report-lines">Research signal · Competition signal<br>Relevant work · Evidence reviewed</div>
+            <div class="report-footer"><span>ANONYMIZED PROFILE</span><span>READY FOR REVIEW</span></div>
+          </article>
+          <article class="report" data-depth="1">
+            <span class="report-dot"></span><div class="report-kicker">SCOUTING REPORT&nbsp; / &nbsp;02</div>
+            <h2 class="report-title">SYSTEMATIC TRADING</h2>
+            <div class="report-lines">Research signal · Engineering signal<br>Role relevance · Evidence reviewed</div>
+            <div class="report-footer"><span>ANONYMIZED PROFILE</span><span>READY FOR REVIEW</span></div>
+          </article>
+          <article class="report" data-depth="2">
+            <span class="report-dot"></span><div class="report-kicker">SCOUTING REPORT&nbsp; / &nbsp;03</div>
+            <h2 class="report-title">LOW-LATENCY ENGINEERING</h2>
+            <div class="report-lines">Engineering signal · Systems signal<br>Role relevance · Evidence reviewed</div>
+            <div class="report-footer"><span>ANONYMIZED PROFILE</span><span>READY FOR REVIEW</span></div>
+          </article>
+        </div>
+      </div>
+      <div class="stage-headings">
+        <div class="stage-heading"><div class="stage-title">01 / TALENT DATASET</div></div>
+        <div class="stage-heading"><div class="stage-title">02 / FEATURE EXTRACTION</div></div>
+        <div class="stage-heading"><div class="stage-title">03 / EVIDENCE VALIDATION</div></div>
+        <div class="stage-heading"><div class="stage-title">04 / QUALIFIED SHORTLIST</div></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+    const flow = document.querySelector('.flow');
+    const reports = [...document.querySelectorAll('.report')];
+    const callouts = {
+      linked: document.querySelector('[data-stage="linked"]'),
+      context: document.querySelector('[data-stage="context"]'),
+      validated: document.querySelector('[data-stage="validated"]')
+    };
+    const exitLight = document.querySelector('.exit-light');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const duration = 9000;
+    const thresholds = [
+      { progress: .43, name: 'linked' },
+      { progress: .63, name: 'context' },
+      { progress: .82, name: 'validated' }
+    ];
+    const particles = Array.from({ length: 22 }, (_, index) => ({
+      lane: (index * 7) % 12,
+      phase: index === 2 ? .78 : index === 11 ? .48 : index === 17 ? .15 : (index * .079 + .11) % 1,
+      report: index === 2 || index === 11 || index === 17,
+      previous: null,
+      radius: index % 5 === 0 ? 3.4 : 2.1
+    }));
+    const lastCallout = { linked: -Infinity, context: -Infinity, validated: -Infinity };
+    let width = 0;
+    let height = 0;
+    let startTime = null;
+
+    function resize() {
+      const bounds = flow.getBoundingClientRect();
+      width = bounds.width;
+      height = bounds.height;
+      const density = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * density);
+      canvas.height = Math.round(height * density);
+      context.setTransform(density, 0, 0, density, 0, 0);
+    }
+    new ResizeObserver(resize).observe(flow);
+    resize();
+
+    function smoothstep(value) {
+      const t = Math.max(0, Math.min(1, value));
+      return t * t * (3 - 2 * t);
+    }
+
+    function laneY(lane, progress, seconds) {
+      const spread = (lane - 5.5) / 5.5;
+      const convergence = smoothstep(progress / .66);
+      const center = height * .52;
+      const fan = spread * (height * .36 * (1 - convergence) + 25 * convergence);
+      const ripple = Math.sin(seconds * (.56 + lane * .027) + progress * 9 + lane * 1.37)
+        * (7 + lane % 4 * 2.5) * (1 - smoothstep(progress / .8));
+      return center + fan + ripple;
+    }
+
+    function announce(name, now) {
+      if (now - lastCallout[name] < 1000) return;
+      lastCallout[name] = now;
+      callouts[name].classList.add('visible');
+    }
+
+    function publishReport() {
+      for (const report of reports) {
+        report.dataset.depth = (Number(report.dataset.depth) + 2) % reports.length;
+      }
+      exitLight.classList.remove('pulse');
+      void exitLight.offsetWidth;
+      exitLight.classList.add('pulse');
+    }
+
+    function draw(time) {
+      if (startTime === null) startTime = time;
+      const elapsed = time - startTime;
+      const seconds = elapsed / 1000;
+      context.clearRect(0, 0, width, height);
+
+      for (let lane = 0; lane < 12; lane++) {
+        context.beginPath();
+        for (let step = 0; step <= 90; step++) {
+          const progress = step / 90;
+          const x = progress * width;
+          const y = laneY(lane, progress, seconds);
+          if (step === 0) context.moveTo(x, y);
+          else context.lineTo(x, y);
+        }
+        context.strokeStyle = lane % 3 === 0 ? 'rgba(225, 170, 78, .49)' : 'rgba(181, 141, 80, .26)';
+        context.lineWidth = lane % 3 === 0 ? 1.25 : .9;
+        context.stroke();
+      }
+
+      for (const particle of particles) {
+        const progress = (particle.phase + elapsed / duration) % 1;
+        const previous = particle.previous;
+        if (previous !== null && !reducedMotion) {
+          if (previous < .94 && progress >= .94 && particle.report) publishReport();
+          for (const threshold of thresholds) {
+            if (previous < threshold.progress && progress >= threshold.progress) announce(threshold.name, time);
+          }
+        }
+        particle.previous = progress;
+        if (progress >= .94) continue;
+        const travel = progress / .94;
+        const x = travel * width;
+        const y = laneY(particle.lane, travel, seconds);
+        const glow = context.createRadialGradient(x, y, 0, x, y, particle.radius * 5);
+        glow.addColorStop(0, 'rgba(246, 193, 93, .72)');
+        glow.addColorStop(1, 'rgba(246, 193, 93, 0)');
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(x, y, particle.radius * 5, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = particle.report ? '#f3bc63' : '#b29b72';
+        context.beginPath();
+        context.arc(x, y, particle.radius, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      for (const threshold of thresholds) {
+        if (time - lastCallout[threshold.name] > 1700) callouts[threshold.name].classList.remove('visible');
+      }
+      if (!reducedMotion) requestAnimationFrame(draw);
+    }
+
+    if (reducedMotion) {
+      draw(0);
+    } else {
+      requestAnimationFrame(draw);
+    }
+  </script>
+</body>
+</html>
