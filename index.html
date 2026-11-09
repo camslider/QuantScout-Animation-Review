@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>QuantScout — первые экраны в движении</title>
+  <style>
+    :root {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: #222320;
+      background: #f3f2ee;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
+    a { color: inherit; }
+    .site-header {
+      position: relative;
+      border-bottom: 1px solid #d9d8d2;
+      background: #f3f2ee;
+    }
+    .header-inner, .page { width: min(100% - 72px, 1320px); margin-inline: auto; }
+    .header-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { font-size: 23px; font-weight: 700; letter-spacing: -.065em; text-decoration: none; }
+    .brand small { margin-left: 14px; color: #74756f; font-size: 13px; font-weight: 400; letter-spacing: 0; }
+    .top-link { font-size: 14px; text-decoration: none; border-bottom: 1px solid #6c6e65; padding-bottom: 4px; white-space: nowrap; }
+    .page { padding-block: 92px 110px; }
+    .eyebrow, .concept-index, .concept-kind { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .eyebrow { color: #706a59; }
+    h1 { max-width: 1040px; margin: 29px 0 22px; font-size: clamp(44px, 5.4vw, 78px); line-height: 1.06; font-weight: 500; letter-spacing: -.075em; }
+    .muted { color: #85867f; }
+    .lead { max-width: 760px; margin: 0; color: #555751; font-size: 18px; line-height: 1.62; }
+    .intro-rule { margin-top: 82px; border-top: 1px solid #d5d5cf; }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin: 28px 0 37px; }
+    .section-heading h2 { margin: 0; font-size: 31px; font-weight: 550; letter-spacing: -.04em; }
+    .section-heading p { margin: 0; color: #777972; font-size: 14px; }
+    .concept { padding-top: 51px; margin-top: 44px; border-top: 1px solid #d7d8d2; }
+    .concept:first-of-type { margin-top: 0; padding-top: 0; border-top: 0; }
+    .concept-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 23px; }
+    .concept-index { color: #9b7541; flex: 0 0 31px; }
+    .concept h3 { margin: 0; font-size: 29px; font-weight: 550; letter-spacing: -.045em; }
+    .concept-kind { margin-left: auto; color: #8b8c84; white-space: nowrap; }
+    .preview-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1672 / 941;
+      overflow: hidden;
+      background: #0a0d0d;
+      border: 1px solid #272a28;
+      box-shadow: 0 18px 42px rgba(16, 20, 18, .16);
+    }
+    .preview-frame iframe { position: absolute; top: 0; left: 0; width: 1672px; height: 941px; border: 0; transform-origin: top left; background: #0a0d0d; }
+    .concept-foot { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 24px 0 0 49px; }
+    .concept-foot p { max-width: 770px; margin: 0; color: #555751; font-size: 16px; line-height: 1.55; }
+    .open-link { flex: 0 0 auto; padding-bottom: 5px; border-bottom: 1px solid #777970; font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .open-link:hover, .top-link:hover { border-color: #aa793a; color: #8b612d; }
+    .site-footer { border-top: 1px solid #d5d5cf; color: #777972; font-size: 13px; padding: 28px 0; }
+    .footer-inner { width: min(100% - 72px, 1320px); margin-inline: auto; display: flex; justify-content: space-between; gap: 20px; }
+    @media (max-width: 780px) {
+      .header-inner, .page, .footer-inner { width: min(100% - 36px, 1320px); }
+      .page { padding-block: 62px 76px; }
+      .intro-rule { margin-top: 58px; }
+      .section-heading, .concept-foot { display: block; }
+      .section-heading p { margin-top: 10px; }
+      .concept-kind { display: none; }
+      .concept-foot { padding-left: 0; }
+      .open-link { display: inline-block; margin-top: 19px; }
+      .concept h3 { font-size: 24px; }
+      .brand small { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top">QuantScout <small>/ Animation review</small></a>
+      <a class="top-link" href="#concepts">Смотреть варианты ↓</a>
+    </div>
+  </header>
+  <main class="page" id="top">
+    <div class="eyebrow">ПЕРВЫЕ ЭКРАНЫ · АНИМАЦИЯ</div>
+    <h1>Первый экран <span class="muted">в движении.</span></h1>
+    <p class="lead">Варианты первого экрана QuantScout.</p>
+	 <p class="lead">Любой экран можно открыть отдельно в полном размере.</p>
+    <div class="intro-rule"></div>
+    <div class="section-heading" id="concepts">
+      <h2>Концепции первого экрана</h2>
+     
+    </div>
+
+    <section class="concept" aria-labelledby="concept-1">
+      <div class="concept-head"><span class="concept-index">01</span><h3 id="concept-1">Сова следит за курсором</h3><span class="concept-kind"></span></div>
+      <div class="preview-frame"><iframe title="Лаймовая сова — интерактивный макет" data-src="QuantScout.html" loading="lazy"></iframe></div>
+      <div class="concept-foot"><p>Геометрическая сова следит взглядом за курсором. Под ней сдержанная 3D-поверхность, по которой скатывается точка и останавливается в нижней точке. Словами это не объясняем: кто в ML, поймёт пасхалку про оптимизацию, остальные увидят красивую научную визуализацию.</p><a class="open-link" href="QuantScout.html" target="_blank" rel="noopener">Открыть отдельно ↗</a></div>
+    </section>
+
+    <section class="concept" aria-labelledby="concept-2">
+      <div class="concept-head"><span class="concept-index">02</span><h3 id="concept-2">Сова в движении</h3><span class="concept-kind"></span></div>
+      <div class="preview-frame"><iframe title="Лаймовая сова — видеоверсия" data-src="QuantScout-Lime-Video.html" loading="lazy"></iframe></div>
+      <div class="concept-foot"><p>Версия с движением совы. Геометрическая сова «смотрит» на пространство кандидатов. Под ней сдержанная 3D-поверхность, по которой скатывается точка и останавливается в нижней точке. Словами это не объясняем: кто в ML, поймёт пасхалку про оптимизацию, остальные увидят красивую научную визуализацию. </p><a class="open-link" href="QuantScout-Lime-Video.html" target="_blank" rel="noopener">Открыть отдельно ↗</a></div>
+    </section>
+
+    <section class="concept" aria-labelledby="concept-3">
+      <div class="concept-head"><span class="concept-index">03</span><h3 id="concept-3">Сова следит за сигналом</h3><span class="concept-kind"></span></div>
+      <div class="preview-frame"><iframe title="Золотая сова и ландшафт" data-src="QuantScout-Gold.html" loading="lazy"></iframe></div>
+      <div class="concept-foot"><p>Сова в тёплой золотой палитре наблюдает за потоком сигналов. Под ней сдержанная 3D-поверхность, по которой скатывается точка и останавливается в нижней точке. Кто в ML, поймёт пасхалку про оптимизацию.</p><a class="open-link" href="QuantScout-Gold.html" target="_blank" rel="noopener">Открыть отдельно ↗</a></div>
+    </section>
+
+    <section class="concept" aria-labelledby="concept-4">
+      <div class="concept-head"><span class="concept-index">04</span><h3 id="concept-4">Сова и волны</h3><span class="concept-kind"></span></div>
+      <div class="preview-frame"><iframe title="Сова на полном видеофоне" data-src="QuantScout-Full-Video.html" loading="lazy"></iframe></div>
+      <div class="concept-foot"><p>Анимация геометрической совы, графиков и сигналов.</p><a class="open-link" href="QuantScout-Full-Video.html" target="_blank" rel="noopener">Открыть отдельно ↗</a></div>
+    </section>
+
+    <section class="concept" aria-labelledby="concept-5">
+      <div class="concept-head"><span class="concept-index">05</span><h3 id="concept-5">Альтернативная вресия</h3><span class="concept-kind"></span></div>
+      <div class="preview-frame"><iframe title="Альтернативный видеофон QuantScout" data-src="QuantScout-Full-Video-Alt.html" loading="lazy"></iframe></div>
+      <div class="concept-foot"><p>Версия с обновлённой графикой. Позволяет сравнить характер и динамику.</p><a class="open-link" href="QuantScout-Full-Video-Alt.html" target="_blank" rel="noopener">Открыть отдельно ↗</a></div>
+    </section>
+
+    <section class="concept" aria-labelledby="concept-6">
+      <div class="concept-head"><span class="concept-index">06</span><h3 id="concept-6">Конвейер поиска</h3><span class="concept-kind"></span></div>
+      <div class="preview-frame"><iframe title="Конвейер поиска и карточки отчётов" data-src="QuantScout-Conveyor-Demo.html" loading="lazy"></iframe></div>
+      <div class="concept-foot"><p>Скаут в конвейере поиска. Точки движутся по линиям от широкого поиска к короткому списку. На выходе появляется сигнал, а карточки скаутингового отчёта сменяют друг друга.</p><a class="open-link" href="QuantScout-Conveyor-Demo.html" target="_blank" rel="noopener">Открыть отдельно ↗</a></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-inner"><span>QuantScout · Демонстрация анимированных концепций</span><a href="#top">Наверх ↑</a></div></footer>
+  <script>
+    const frames = [...document.querySelectorAll('.preview-frame')];
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const iframe = entry.target.querySelector('iframe');
+        iframe.style.transform = `scale(${entry.contentRect.width / 1672})`;
+      }
+    });
+    frames.forEach(frame => observer.observe(frame));
+
+    const visibility = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const iframe = entry.target.querySelector('iframe');
+        if (entry.isIntersecting) {
+          if (iframe.getAttribute('src') !== iframe.dataset.src) iframe.src = iframe.dataset.src;
+        } else if (iframe.hasAttribute('src')) {
+          iframe.removeAttribute('src');
+        }
+      }
+    }, { rootMargin: '500px 0px' });
+    frames.forEach(frame => visibility.observe(frame));
+  </script>
+</body>
+</html>
